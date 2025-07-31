@@ -7,9 +7,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 引入 auth 路由
+// 引入路由
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+const novelRoutes = require('./routes/novelRoutes');
+app.use('/api/novels', novelRoutes);
+
+const tagRoutes = require('./routes/tagRoutes');
+app.use('/api/tags', tagRoutes);
+
+const favoriteRoutes = require('./routes/favoriteRoutes');
+app.use('/api/favorites', favoriteRoutes);
 
 // 測試保護路由（需要登入）
 const authenticateToken = require('./middleware/authMiddleware');
