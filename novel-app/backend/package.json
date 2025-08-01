@@ -9,11 +9,13 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
-    "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.3"
+    "sequelize": "^6.37.7"
   },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.3"
   }
 }
