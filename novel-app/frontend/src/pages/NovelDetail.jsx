@@ -17,19 +17,15 @@ export default function NovelDetail() {
   const [loadingFav, setLoadingFav] = useState(false)
 
   useEffect(() => {
-    // 拉小说详情
     fetchNovelDetail(id)
       .then(res => setNovel(res.data))
       .catch(() => setError('Failed to load novel.'))
 
-    // 检查是否已收藏
     fetchFavorites()
       .then(res => {
         setIsFav(res.data.some(n => n.id === Number(id)))
       })
-      .catch(() => {
-        /* 忽略错误 */
-      })
+      .catch(() => {})
   }, [id])
 
   const toggleFavorite = async () => {
@@ -73,11 +69,30 @@ export default function NovelDetail() {
         alt={novel.title}
         className="w-48 mb-4"
       />
+
+      {/* 简介 */}
       <div className="prose mb-4">
         <p>{novel.summary}</p>
       </div>
 
-      {/* —— 在这里新增编辑和删除按钮 —— */}
+      {/* —— 新增：标签展示 —— */}
+      {novel.Tags && novel.Tags.length > 0 && (
+        <div className="mb-6">
+          <p className="font-semibold mb-2">Tags:</p>
+          <div className="flex flex-wrap gap-2">
+            {novel.Tags.map(tag => (
+              <span
+                key={tag.id}
+                className="px-2 py-1 bg-gray-200 rounded-full text-sm"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 编辑 & 删除 */}
       <div className="flex space-x-2">
         <Link
           to={`/novels/${id}/edit`}

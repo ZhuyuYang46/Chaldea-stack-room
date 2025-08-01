@@ -1,20 +1,24 @@
 // backend/controllers/novelController.js
+
 const { Novel, Tag } = require('../models');
 
-// 取得所有小說，並可根据 ?tags=标签1,标签2 过滤
+/**
+ * GET /api/novels
+ * 取得所有小说，可通过 ?tags=Tag1,Tag2 进行过滤
+ */
 exports.getAllNovels = async (req, res) => {
   try {
     const { tags } = req.query;
 
-    // 构造 include 配置：默认只 include 所有标签
+    // 默认 include 所有标签
     const include = [{
       model: Tag,
-      through: { attributes: [] }  // 不返回中间表字段
+      through: { attributes: [] }
     }];
 
-    // 如果 URL 里有 tags 参数，就加上 where + required 强制 INNER JOIN
+    // 如果传了 tags 参数，拆分并设置为 INNER JOIN
     if (tags) {
-      const names = tags.split(','); // ["奇幻","冒险"]
+      const names = tags.split(',');
       include[0].where = { name: names };
       include[0].required = true;
     }
@@ -27,7 +31,10 @@ exports.getAllNovels = async (req, res) => {
   }
 };
 
-// 取得单一本小说，连带它的标签
+/**
+ * GET /api/novels/:id
+ * 根据 ID 取得单本小说，连带它的标签
+ */
 exports.getNovelById = async (req, res) => {
   try {
     const novel = await Novel.findByPk(req.params.id, {
@@ -36,7 +43,9 @@ exports.getNovelById = async (req, res) => {
         through: { attributes: [] }
       }
     });
-    if (!novel) return res.status(404).json({ message: 'Novel not found' });
+    if (!novel) {
+      return res.status(404).json({ message: 'Novel not found' });
+    }
     res.json(novel);
   } catch (error) {
     console.error('getNovelById error:', error);
@@ -44,7 +53,10 @@ exports.getNovelById = async (req, res) => {
   }
 };
 
-// 新增 小说（不处理标签关联，若需要可另开接口）
+/**
+ * POST /api/novels
+ * 新增小说（仅创建基本字段，不处理标签关联）
+ */
 exports.createNovel = async (req, res) => {
   try {
     const { title, author, summary, coverImageUrl } = req.body;
@@ -56,12 +68,16 @@ exports.createNovel = async (req, res) => {
   }
 };
 
-// 修改小说（同上，不自动处理标签）
+/**
+ * PUT /api/novels/:id
+ * 更新小说（仅更新基本字段，不处理标签关联）
+ */
 exports.updateNovel = async (req, res) => {
   try {
     const novel = await Novel.findByPk(req.params.id);
-    if (!novel) return res.status(404).json({ message: 'Novel not found' });
-
+    if (!novel) {
+      return res.status(404).json({ message: 'Novel not found' });
+    }
     await novel.update(req.body);
     res.json(novel);
   } catch (error) {
@@ -70,16 +86,52 @@ exports.updateNovel = async (req, res) => {
   }
 };
 
-// 刪除小說
+/**
+ * DELETE /api/novels/:id
+ * 删除小说
+ */
 exports.deleteNovel = async (req, res) => {
   try {
     const novel = await Novel.findByPk(req.params.id);
-    if (!novel) return res.status(404).json({ message: 'Novel not found' });
-
+    if (!novel) {
+      return res.status(404).json({ message: 'Novel not found' });
+    }
     await novel.destroy();
     res.json({ message: 'Novel deleted' });
   } catch (error) {
     console.error('deleteNovel error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * POST /api/novels/:novelId/tags
+ * 为小说一次性设置标签关联
+ * 前端请求体应为 { tagIds: [1,2,3] }
+ */
+exports.setNovelTags = async (req, res) => {
+  try {
+    const novelId = req.params.novelId;
+    const { tagIds } = req.body;             // e.g. [1,2,3]
+    
+    const novel = await Novel.findByPk(novelId);
+    if (!novel) {
+      return res.status(404).json({ error: 'Novel not found' });
+    }
+
+    // Sequelize 会帮我们更新中间表 NovelTags
+    await novel.setTags(tagIds);
+
+    // 重新查询并带上标签返回给前端
+    const updated = await Novel.findByPk(novelId, {
+      include: {
+        model: Tag,
+        through: { attributes: [] }
+      }
+    });
+    res.json(updated);
+  } catch (error) {
+    console.error('setNovelTags error:', error);
     res.status(500).json({ error: error.message });
   }
 };
