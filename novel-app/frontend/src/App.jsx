@@ -9,6 +9,7 @@ import NovelList    from './pages/NovelList.jsx'
 import NovelDetail  from './pages/NovelDetail.jsx'
 import TagManager from './pages/TagManager.jsx'
 import FavoriteList from './pages/FavoriteList.jsx'
+import NovelForm from './pages/NovelForm.jsx'
 import { AuthContext } from './context/AuthContext.jsx'
 
 function PrivateRoute({ children }) {
@@ -65,7 +66,24 @@ export default function App() {
             </PrivateRoute>
           }
         />
+        <Route
+  path="/novels/new"
+  element={
+    <PrivateRoute>
+      <NovelForm />
+    </PrivateRoute>
+  }
+/>
+<Route
+  path="/novels/:id/edit"
+  element={
+    <PrivateRoute>
+      <NovelForm />
+    </PrivateRoute>
+  }
+/>
       </Routes>
+      
     </BrowserRouter>
   )
 }

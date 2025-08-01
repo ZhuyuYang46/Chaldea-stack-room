@@ -39,6 +39,12 @@ export default function NovelList() {
       <h2 className="text-2xl font-semibold mb-4">Novel List</h2>
 
       {/* 标签筛选区 */}
+      <Link
+  to="/novels/new"
+  className="inline-block bg-green-600 text-white px-4 py-2 rounded mb-4"
+>
+  + New Novel
+</Link>
       <div className="mb-6 flex flex-wrap gap-2">
         {tags.map(tag => (
           <button

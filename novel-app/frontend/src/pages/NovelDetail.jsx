@@ -1,7 +1,7 @@
 // src/pages/NovelDetail.jsx
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { fetchNovelDetail } from '../api/novel'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { fetchNovelDetail, deleteNovel } from '../api/novel'
 import {
   fetchFavorites,
   addFavorite,
@@ -10,9 +10,10 @@ import {
 
 export default function NovelDetail() {
   const { id } = useParams()
-  const [novel, setNovel] = useState(null)
-  const [error, setError] = useState('')
-  const [isFav, setIsFav] = useState(false)
+  const nav     = useNavigate()
+  const [novel, setNovel]     = useState(null)
+  const [error, setError]     = useState('')
+  const [isFav, setIsFav]     = useState(false)
   const [loadingFav, setLoadingFav] = useState(false)
 
   useEffect(() => {
@@ -72,8 +73,30 @@ export default function NovelDetail() {
         alt={novel.title}
         className="w-48 mb-4"
       />
-      <div className="prose">
+      <div className="prose mb-4">
         <p>{novel.summary}</p>
+      </div>
+
+      {/* —— 在这里新增编辑和删除按钮 —— */}
+      <div className="flex space-x-2">
+        <Link
+          to={`/novels/${id}/edit`}
+          className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+        >
+          Edit
+        </Link>
+        <button
+          onClick={() => {
+            if (window.confirm('Are you sure you want to delete this novel?')) {
+              deleteNovel(id)
+                .then(() => nav('/novels'))
+                .catch(() => setError('Failed to delete novel.'))
+            }
+          }}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          Delete
+        </button>
       </div>
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
