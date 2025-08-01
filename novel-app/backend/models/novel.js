@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Novel.belongsToMany(models.Tag, {
+        through: 'NovelTags',      // join 表名
+        foreignKey: 'novelId'      // Novel 在中间表里的外键字段
+      });
     }
   }
   Novel.init({

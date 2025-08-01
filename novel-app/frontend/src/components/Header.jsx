@@ -19,6 +19,7 @@ export default function Header() {
           <Link to="/">Chaldea</Link>
         </h1>
          <Link to="/novels" className="hover:underline">Novels</Link>
+         <Link to="/tags"    className="hover:underline">Tags</Link>
         <div className="space-x-4">
           {user ? (
             <>

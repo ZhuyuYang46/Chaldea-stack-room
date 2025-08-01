@@ -7,6 +7,7 @@ import Login        from './pages/Login.jsx'
 import Register     from './pages/Register.jsx'
 import NovelList    from './pages/NovelList.jsx'
 import NovelDetail  from './pages/NovelDetail.jsx'
+import TagManager from './pages/TagManager.jsx'
 import { AuthContext } from './context/AuthContext.jsx'
 
 function PrivateRoute({ children }) {
@@ -44,6 +45,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <NovelDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/tags"      // ← 新增的 Tag 管理页面
+          element={
+            <PrivateRoute>
+              <TagManager />
             </PrivateRoute>
           }
         />
