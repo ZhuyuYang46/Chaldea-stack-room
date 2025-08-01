@@ -20,6 +20,7 @@ export default function Header() {
         </h1>
          <Link to="/novels" className="hover:underline">Novels</Link>
          <Link to="/tags"    className="hover:underline">Tags</Link>
+         <Link to="/favorites" className="hover:underline">Favorites</Link>
         <div className="space-x-4">
           {user ? (
             <>

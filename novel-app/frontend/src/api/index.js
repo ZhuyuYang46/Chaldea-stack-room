@@ -1,19 +1,15 @@
 // src/api/index.js
-import axios from 'axios';
+import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 5000,
-});
+  baseURL: import.meta.env.VITE_API_BASE_URL  // 我们用环境变量
+    || 'http://localhost:3001/api'           // 后备：后端地址
+})
 
-// 在每次请求头中自动附带 token
 api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    // 后端可能要求 Bearer 前缀
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+  const token = localStorage.getItem('token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
 
-export default api;
+export default api

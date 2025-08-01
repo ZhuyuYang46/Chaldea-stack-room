@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Favorite.belongsTo(models.Novel, {
+        foreignKey: 'novelId',
+        as: 'Novel'             // 这样在 include 时用 f.Novel 拿到实例
+      });
+
     }
   }
   Favorite.init({

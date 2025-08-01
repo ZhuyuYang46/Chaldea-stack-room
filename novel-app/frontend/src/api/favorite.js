@@ -1,5 +1,14 @@
-import api from './index';
+// src/api/favorite.js
+import api from './index'
 
-export const fetchFavorites   = ()   => api.get('/favorites');
-export const addFavorite      = id   => api.post(`/favorites/${id}`);
-export const removeFavorite   = id   => api.delete(`/favorites/${id}`);
+// 查看我的所有收藏
+export const fetchFavorites = () =>
+  api.get('/favorites')
+
+// 收藏某本小说（/:novelId）
+export const addFavorite = novelId =>
+  api.post(`/favorites/${novelId}`)
+
+// 取消收藏
+export const removeFavorite = novelId =>
+  api.delete(`/favorites/${novelId}`)
