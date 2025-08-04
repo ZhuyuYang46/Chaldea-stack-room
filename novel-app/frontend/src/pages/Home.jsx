@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-semibold">Welcome to Chaldea</h2>
+    <div className="pt-[100px] min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <h1 className="text-2xl font-semibold">Welcome to Chaldea</h1>
     </div>
   );
 }

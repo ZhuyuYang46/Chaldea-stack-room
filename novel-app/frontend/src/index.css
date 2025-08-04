@@ -29,8 +29,10 @@ a:hover {
 }
 
 body {
+  @apply bg-[url('./public/background.jpg')] bg-cover bg-center;
   margin: 0;
-  display: flex;
+  /*display: flex;*/
+  display: block;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;

@@ -23,10 +23,10 @@ export default function Register() {
 
   return (
       // <div className="container mx-auto p-6 max-w-md">
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="pt-[10px] min-h-screen flex items-center justify-center bg-gray-100 p-4">
         <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">User registration </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-2xl font-bold mb-4 text-center">Registration </h2>
+          <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
             <input
                 type="text"
                 placeholder="Username"
@@ -53,9 +53,9 @@ export default function Register() {
             />
             <button
                 type="submit"
-                className="w-full rounded-[6px] bg-green-600 text-white p-2 hover:bg-green-700"
+                className="w-4/5 rounded-[6px] bg-green-600 text-white p-2 hover:bg-green-700 block mx-auto"
             >
-              Register
+              Sign up
             </button>
           </form>
         </div>

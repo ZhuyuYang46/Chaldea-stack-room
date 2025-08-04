@@ -36,20 +36,20 @@ export default function Login() {
   }
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="pt-[10px] min-h-screen flex items-center justify-center bg-gray-100 p-4">
         <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+          <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
 
           {errorMsg && <p className="text-red-500 mb-4 text-center">{errorMsg}</p>}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
             <input
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full border border-gray-300 p-3 rounded-[6px] text-black placeholder-gray-400"
+                className="w-full border border-gray-300 p-3 rounded-[6px] text-black mx-auto placeholder-gray-400 block"
             />
             <input
                 type="password"
@@ -57,11 +57,11 @@ export default function Login() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full border border-gray-300 p-3 rounded-[6px] bg-white placeholder-gray-400"
+                className="w-full h-14 border border-gray-300 p-3 rounded-[6px] bg-white placeholder-gray-400"
             />
             <button
                 type="submit"
-                className="w-full py-2 rounded-[6px] text-sm hover:bg-gray-800 transition-colors"
+                className="w-4/5 py-2 rounded-[6px] text-sm hover:bg-gray-800 transition-colors block mx-auto"
             >
               Sign in
             </button>
