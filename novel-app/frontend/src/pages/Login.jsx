@@ -1,3 +1,4 @@
+
 // src/pages/Login.jsx
 import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -35,36 +36,37 @@ export default function Login() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-md">
-      <h2 className="text-2xl font-bold mb-4">User Login</h2>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+        <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-      {/* 显示错误消息 */}
-      {errorMsg && <p className="text-red-500 mb-4">{errorMsg}</p>}
+          {errorMsg && <p className="text-red-500 mb-4 text-center">{errorMsg}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-          className="w-full border p-2 rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
-          Login
-        </button>
-      </form>
-    </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                className="w-full border border-gray-300 p-3 rounded-[6px] text-black placeholder-gray-400"
+            />
+            <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                className="w-full border border-gray-300 p-3 rounded-[6px] bg-white placeholder-gray-400"
+            />
+            <button
+                type="submit"
+                className="w-full py-2 rounded-[6px] text-sm hover:bg-gray-800 transition-colors"
+            >
+              Sign in
+            </button>
+          </form>
+        </div>
+      </div>
   )
 }
