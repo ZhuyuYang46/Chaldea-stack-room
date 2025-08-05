@@ -80,14 +80,15 @@ export default function NovelForm() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-lg">
+    // <div className="container mx-auto p-6 max-w-lg">
+      <div className="pt-[100px] min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <h2 className="text-2xl font-bold mb-4">
         {id ? 'Edit Novel' : 'Create Novel'}
       </h2>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
         {/* 标题 / 作者 / 封面 / 简介 */}
         <input
           name="title"

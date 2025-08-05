@@ -13,9 +13,9 @@ export default function Header() {
   }
 
   return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-800 text-white shadow">
+      <header className="fixed top-0 left-0 right-0 z-50">
         <nav className="max-w-6xl mx-auto px-6 py-4 flex flex-col justify-between items-center">
-              <h1 className="text-xl font-bold">
+              <h1 className="text-xl font-bold items-center">
                   <Link to="/">Chaldea</Link>
               </h1>
               <div className="flex items-center space-x-6">
