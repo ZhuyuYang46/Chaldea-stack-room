@@ -26,7 +26,7 @@ export default function Header() {
                     {user ? (
                         <>
                             <span>Welcome, {user.username}</span>
-                            <button onClick={handleLogout}>Logout</button>
+                            <button onClick={handleLogout}>Log out</button>
                         </>
                     ) : (
                         <>
