@@ -1,64 +1,82 @@
-// src/pages/Register.jsx
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {register} from '../api/auth';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { register } from '../api/auth'
 
 export default function Register() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const nav = useNavigate();
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+  const nav = useNavigate()
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        try {
-            await register({username, email, password});
-            alert('Registration successful. Please log in using your email and password.');
-            nav('/login');
-        } catch (err) {
-            console.error(err);
-            alert(err.response?.data?.message || 'Registration failed. Please try again. ');
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg('')
+    try {
+      await register({ username, email, password })
+      nav('/login')
+      alert('Registration successful. Please log in.')
+    } catch (err) {
+      console.error(err)
+      const msg = err.response?.data?.message || 'Registration failed. Please try again.'
+      setErrorMsg(msg)
+    }
+  }
 
-    return (
-        // <div className="container mx-auto p-6 max-w-md">
-        <div className="pt-[10px] min-h-screen flex items-center justify-center bg-gray-100 p-4">
-            <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-4 text-center">Registration </h2>
-                <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
-                        required
-                        className="w-full border p-2 rounded-[6px]"
-                    />
-                    <input
-                        type="email"
-                        placeholder="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                        className="w-full border p-2 rounded-[6px]"
-                    />
-                    <input
-                        type="password"
-                        placeholder="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        className="w-full border p-2 rounded-[6px]"
-                    />
-                    <button
-                        type="submit"
-                        className="w-4/5 rounded-[6px] bg-green-600 text-white p-2 hover:bg-green-700 block mx-auto"
-                    >
-                        Sign up
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
+  return (
+    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+      <div className="card p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
+        <h2 className="text-center mb-4">Register</h2>
+
+        {errorMsg && (
+          <div className="alert alert-danger" role="alert">
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">Username</label>
+            <input
+              type="text"
+              id="username"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter email"
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-success w-100">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  )
 }

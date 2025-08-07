@@ -1,71 +1,73 @@
-// src/pages/Login.jsx
-import React, {useState, useContext} from 'react'
-import {useNavigate} from 'react-router-dom'
-import {login, fetchProtected} from '../api/auth'
-import {AuthContext} from '../context/AuthContext.jsx'
+import React, { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { login, fetchProtected } from '../api/auth'
+import { AuthContext } from '../context/AuthContext.jsx'
 
 export default function Login() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [errorMsg, setErrorMsg] = useState('')
-    const nav = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+  const nav = useNavigate()
+  const { setUser } = useContext(AuthContext)
 
-    // 从上下文拿到 setUser 来写入当前用户
-    const {setUser} = useContext(AuthContext)
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg('')
+    try {
+      const { data: loginRes } = await login({ email, password })
+      localStorage.setItem('token', loginRes.token)
 
-    const handleSubmit = async e => {
-        e.preventDefault()
-        setErrorMsg('')   // 清掉之前的错误
-        try {
-            // 1. 登录，拿到 token
-            const {data: loginRes} = await login({email, password})
-            localStorage.setItem('token', loginRes.token)
+      const { data: protectedRes } = await fetchProtected()
+      setUser(protectedRes.user)
 
-            // 2. 再去拿用户信息
-            const {data: protectedRes} = await fetchProtected()
-            setUser(protectedRes.user)
-
-            // 3. 跳转到小说列表
-            nav('/novels')
-        } catch (err) {
-            console.error(err)
-            const msg = err.response?.data?.message || 'Login failed. Please check your credentials.'
-            setErrorMsg(msg)
-        }
+      nav('/novels')
+    } catch (err) {
+      console.error(err)
+      const msg = err.response?.data?.message || 'Login failed. Please check your credentials.'
+      setErrorMsg(msg)
     }
+  }
 
-    return (
-        <div className="pt-[10px] min-h-screen flex items-center justify-center bg-gray-100 p-4">
-            <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
+  return (
+    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+      <div className="card p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
+        <h2 className="text-center mb-4">Login</h2>
+        {errorMsg && (
+          <div className="alert alert-danger" role="alert">
+            {errorMsg}
+          </div>
+        )}
 
-                {errorMsg && <p className="text-red-500 mb-4 text-center">{errorMsg}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="form-control"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                        className="w-full border border-gray-300 p-3 rounded-[6px] text-black mx-auto placeholder-gray-400 block"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        className="w-full h-14 border border-gray-300 p-3 rounded-[6px] bg-white placeholder-gray-400"
-                    />
-                    <button
-                        type="submit"
-                        className="w-4/5 py-2 rounded-[6px] text-sm hover:bg-gray-800 transition-colors block mx-auto"
-                    >
-                        Sign in
-                    </button>
-                </form>
-            </div>
-        </div>
-    )
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              className="form-control"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100">Sign In</button>
+        </form>
+      </div>
+    </div>
+  )
 }

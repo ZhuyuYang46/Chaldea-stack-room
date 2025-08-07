@@ -1,41 +1,66 @@
-// src/components/Header.jsx
-import React, {useContext} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
-import {AuthContext} from '../context/AuthContext.jsx'
+import React, { useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext.jsx'
 
 export default function Header() {
-    const {user, logout} = useContext(AuthContext)
-    const nav = useNavigate()
+  const { user, logout } = useContext(AuthContext)
+  const nav = useNavigate()
 
-    const handleLogout = () => {
-        logout()
-        nav('/login')
-    }
+  const handleLogout = () => {
+    logout()
+    nav('/login')
+  }
 
-    return (
-        <header className="fixed top-0 left-0 right-0 z-50">
-            <nav className="max-w-6xl mx-auto px-6 py-4 flex flex-col justify-between items-center">
-                <h1 className="text-xl font-bold items-center">
-                    <Link to="/">Chaldea</Link>
-                </h1>
-                <div className="flex items-center space-x-6">
-                    <Link to="/novels" className="hover:underline">Novels</Link>
-                    <Link to="/tags" className="hover:underline">Tags</Link>
-                    <Link to="/favorites" className="hover:underline">Favorites</Link>
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container-fluid">
+        <Link className="navbar-brand fw-bold" to="/">Chaldea</Link>
 
-                    {user ? (
-                        <>
-                            <span>Welcome, {user.username}</span>
-                            <button onClick={handleLogout}>Log out</button>
-                        </>
-                    ) : (
-                        <>
-                            <Link className="hover:underline" to="/login">Login</Link>
-                            <Link className="hover:underline" to="/register">Register</Link>
-                        </>
-                    )}
-                </div>
-            </nav>
-        </header>
-    )
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon" />
+        </button>
+
+        <div className="collapse navbar-collapse" id="mainNavbar">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {user && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/novels">Novels</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/tags">Tags</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/favorites">Favorites</Link>
+                </li>
+              </>
+            )}
+          </ul>
+
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link">Welcome, {user.username}</span>
+                </li>
+                <li className="nav-item">
+                  <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>Log out</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register">Register</Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  )
 }
