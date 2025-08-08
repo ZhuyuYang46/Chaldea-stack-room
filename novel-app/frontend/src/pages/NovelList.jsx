@@ -7,6 +7,7 @@ export default function NovelList() {
   const [novels, setNovels] = useState([])
   const [tags, setTags] = useState([])
   const [selectedTags, setSelectedTags] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     fetchTags()
@@ -15,13 +16,23 @@ export default function NovelList() {
   }, [])
 
   useEffect(() => {
-    const params = selectedTags.length
-      ? { tags: selectedTags.join(',') }
-      : {}
+    const params = {}
+    if (selectedTags.length) params.tags = selectedTags.join(',')
+
     fetchNovels(params)
-      .then(res => setNovels(res.data))
+      .then(res => {
+        let data = res.data
+        if (searchTerm.trim()) {
+          const term = searchTerm.trim().toLowerCase()
+          data = data.filter(n =>
+            n.title.toLowerCase().includes(term) ||
+            n.author.toLowerCase().includes(term)
+          )
+        }
+        setNovels(data)
+      })
       .catch(console.error)
-  }, [selectedTags])
+  }, [selectedTags, searchTerm])
 
   const toggleTag = (tagName) => {
     setSelectedTags(prev =>
@@ -40,16 +51,28 @@ export default function NovelList() {
         </Link>
       </div>
 
+      {/* 搜索框 */}
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search by title or author"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {/* Tag Filter */}
       <div className="mb-4">
         {tags.map(tag => (
           <button
             key={tag.id}
             onClick={() => toggleTag(tag.name)}
-            className={`btn btn-sm me-2 mb-2 ${selectedTags.includes(tag.name)
+            className={`btn btn-sm me-2 mb-2 ${
+              selectedTags.includes(tag.name)
                 ? 'btn-primary'
                 : 'btn-outline-secondary'
-              }`}
+            }`}
           >
             {tag.name}
           </button>
