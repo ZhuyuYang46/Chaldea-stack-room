@@ -31,6 +31,10 @@ fs
     db[model.name] = model;
   });
 
+const Chapter = require('./chapter')(sequelize, Sequelize.DataTypes);
+
+db.Chapter = Chapter;
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
@@ -39,5 +43,8 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.Novel.hasMany(db.Chapter, { foreignKey: 'novel_id', as: 'chapters' });
+Chapter.associate(db);
 
 module.exports = db;

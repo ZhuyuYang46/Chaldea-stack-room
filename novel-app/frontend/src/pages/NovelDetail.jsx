@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { fetchNovelDetail, deleteNovel } from '../api/novel'
 import { fetchFavorites, addFavorite, removeFavorite } from '../api/favorite'
+import axios from 'axios'
 
 export default function NovelDetail() {
   const { id } = useParams()
@@ -10,6 +11,11 @@ export default function NovelDetail() {
   const [error, setError] = useState('')
   const [isFav, setIsFav] = useState(false)
   const [loadingFav, setLoadingFav] = useState(false)
+  const [chapters, setChapters] = useState([])
+  // 新增章节表单状态
+  const [showAdd, setShowAdd] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
+  const [newContent, setNewContent] = useState('')
 
   useEffect(() => {
     fetchNovelDetail(id)
@@ -21,6 +27,10 @@ export default function NovelDetail() {
         setIsFav(res.data.some(n => n.id === Number(id)))
       })
       .catch(() => {})
+
+    axios.get(`/api/novels/${id}/chapters`)
+      .then(res => setChapters(res.data))
+      .catch(() => setError('Failed to load chapters.'))
   }, [id])
 
   const toggleFavorite = async () => {
@@ -38,6 +48,27 @@ export default function NovelDetail() {
     } finally {
       setLoadingFav(false)
     }
+  }
+
+  const addChapter = () => {
+    if (!newTitle.trim() || !newContent.trim()) {
+      setError('Title and content cannot be empty.')
+      return
+    }
+
+    axios.post(`/api/novels/${id}/chapters`, {
+      title: newTitle,
+      content: newContent
+    }).then(res => {
+      setChapters(prev => [...prev, res.data])
+      setShowAdd(false)
+      setNewTitle('')
+      setNewContent('')
+      setError('') // 清除错误信息
+    }).catch(err => {
+      const errorMessage = err.response?.data?.message || 'Failed to add chapter.'
+      setError(errorMessage)
+    })
   }
 
   if (!novel) {
@@ -121,6 +152,55 @@ export default function NovelDetail() {
 
             {error && <p className="text-danger mt-3">{error}</p>}
           </div>
+        </div>
+
+        {/* 章節列表 */}
+        <div className="mt-4">
+          <h3 className="h5 fw-bold">Chapters</h3>
+          <button
+            onClick={() => setShowAdd(!showAdd)}
+            className="btn btn-primary mb-3"
+          >
+            {showAdd ? 'Cancel' : 'Add Chapter'}
+          </button>
+          {showAdd && (
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control mb-2"
+                placeholder="Chapter Title"
+                value={newTitle}
+                onChange={e => setNewTitle(e.target.value)}
+              />
+              <textarea
+                className="form-control mb-2"
+                placeholder="Chapter Content"
+                value={newContent}
+                onChange={e => setNewContent(e.target.value)}
+                rows="3"
+              />
+              <button
+                onClick={addChapter}
+                className="btn btn-success"
+              >
+                Submit
+              </button>
+              {error && <p className="text-danger mt-2">{error}</p>}
+            </div>
+          )}
+          <ul className="list-unstyled">
+            {Array.isArray(chapters) && chapters.map(chapter => (
+              <li key={chapter.id} className="mb-2 d-flex align-items-center gap-2">
+                <Link
+                  to={`/novels/${id}/chapter/${chapter.id}`}
+                  className="btn btn-outline-primary flex-grow-1 text-start"
+                >
+                  {chapter.title}
+                </Link>
+                
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

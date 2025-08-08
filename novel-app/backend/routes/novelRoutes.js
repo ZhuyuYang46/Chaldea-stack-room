@@ -37,4 +37,26 @@ router.post(
   novelController.setNovelTags
 );
 
+// 添加章节
+router.post('/:id/chapters', async (req, res) => {
+  const { id } = req.params
+  const { title, content } = req.body
+
+  if (!title || !content) {
+    return res.status(400).json({ message: 'Title and content are necessary.' })
+  }
+
+  try {
+    const chapter = await Chapter.create({
+      novelId: id,
+      title,
+      content
+    })
+    res.status(201).json(chapter)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Failed to add chapter.' })
+  }
+});
+
 module.exports = router;

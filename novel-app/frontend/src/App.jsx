@@ -11,6 +11,8 @@ import TagManager from './pages/TagManager.jsx'
 import FavoriteList from './pages/FavoriteList.jsx'
 import NovelForm from './pages/NovelForm.jsx'
 import { AuthContext } from './context/AuthContext.jsx'
+import ChapterEditor from './pages/ChapterEditor.jsx'
+import ChapterView from './pages/ChapterView.jsx'
 
 function PrivateRoute({ children }) {
     const { user, loading } = useContext(AuthContext)
@@ -88,6 +90,30 @@ export default function App() {
                     element={
                         <PrivateRoute>
                             <NovelForm />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/novels/:id/chapter/new"
+                    element={
+                        <PrivateRoute>
+                            <ChapterEditor />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/novels/:id/chapter/:chapterId/edit"
+                    element={
+                        <PrivateRoute>
+                            <ChapterEditor />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/novels/:id/chapter/:chapterId"
+                    element={
+                        <PrivateRoute>
+                            <ChapterView />
                         </PrivateRoute>
                     }
                 />
